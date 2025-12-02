@@ -1,91 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingStart="24dp"
-    android:paddingEnd="24dp"
-    android:paddingTop="16dp"
     tools:context=".MainActivity">
 
-    <!-- EditText cho Mã số sinh viên -->
-    <EditText
-        android:id="@+id/etMssv"
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:hint="Mã số sinh viên"
-        android:inputType="text"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:minHeight="48dp"
-        android:textSize="16sp" />
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="@string/app_name"
+        app:titleTextColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Đường kẻ ngang mỏng -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#E0E0E0" />
-
-    <!-- EditText cho Họ tên -->
-    <EditText
-        android:id="@+id/etHoTen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/transparent"
-        android:hint="Họ tên"
-        android:inputType="textPersonName"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:minHeight="48dp"
-        android:textSize="16sp" />
-
-    <!-- Đường kẻ ngang mỏng -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#E0E0E0" />
-
-    <!-- Nhóm Button -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp"
-        android:orientation="horizontal">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Add"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            app:backgroundTint="#673AB7"
-            app:cornerRadius="24dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnUpdate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Update"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            app:backgroundTint="#673AB7"
-            app:cornerRadius="24dp" />
-    </LinearLayout>
-
-    <!-- Danh sách sinh viên -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:listitem="@layout/item_student" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

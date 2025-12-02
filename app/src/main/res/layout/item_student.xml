@@ -32,15 +32,4 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- Icon xóa -->
-    <ImageView
-        android:id="@+id/ivDelete"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:contentDescription="Xóa sinh viên"
-        android:padding="8dp"
-        android:src="@android:drawable/ic_delete"
-        app:tint="#54000000" />
-    <!-- Sửa từ app:tint thành android:tint để đảm bảo tương thích -->
-
 </LinearLayout>

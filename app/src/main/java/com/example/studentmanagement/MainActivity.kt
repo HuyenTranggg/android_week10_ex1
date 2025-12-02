@@ -1,95 +1,86 @@
 package com.example.studentmanagement
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
+import android.view.Menu
+import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var etMssv: EditText
-    private lateinit var etHoTen: EditText
-    private lateinit var btnAdd: Button
-    private lateinit var btnUpdate: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var studentAdapter: StudentAdapter
     private val studentList = mutableListOf<Student>()
-    private var selectedStudent: Student? = null
+
+    private val addStudentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val newStudent = it.data?.getParcelableExtra<Student>("newStudent")
+            if (newStudent != null) {
+                studentList.add(newStudent)
+                studentAdapter.notifyItemInserted(studentList.size - 1)
+            }
+        }
+    }
+
+    private val updateStudentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val updatedStudent = it.data?.getParcelableExtra<Student>("updatedStudent")
+            val originalMssv = it.data?.getStringExtra("originalMssv")
+            if (updatedStudent != null && originalMssv != null) {
+                val index = studentList.indexOfFirst { it.mssv == originalMssv }
+                if (index != -1) {
+                    studentList[index] = updatedStudent
+                    studentAdapter.notifyItemChanged(index)
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        etMssv = findViewById(R.id.etMssv)
-        etHoTen = findViewById(R.id.etHoTen)
-        btnAdd = findViewById(R.id.btnAdd)
-        btnUpdate = findViewById(R.id.btnUpdate)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
         recyclerView = findViewById(R.id.recyclerView)
-
+        addInitialData()
         setupRecyclerView()
+    }
 
-        btnAdd.setOnClickListener {
-            addStudent()
-        }
-
-        btnUpdate.setOnClickListener {
-            updateStudent()
-        }
+    private fun addInitialData() {
+        studentList.add(Student("20200001", "Nguyễn Văn A", "0123456789", "Hà Nội"))
+        studentList.add(Student("20200002", "Trần Thị B", "0987654321", "TP. Hồ Chí Minh"))
     }
 
     private fun setupRecyclerView() {
-        studentAdapter = StudentAdapter(studentList,
-            onItemClick = { student ->
-                etMssv.setText(student.mssv)
-                etHoTen.setText(student.hoTen)
-                selectedStudent = student
-            },
-            onDeleteClick = { student ->
-                deleteStudent(student)
-            }
-        )
+        studentAdapter = StudentAdapter(studentList) {
+            val intent = Intent(this, StudentDetailActivity::class.java)
+            intent.putExtra("student", it)
+            updateStudentLauncher.launch(intent)
+        }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = studentAdapter
     }
 
-    private fun addStudent() {
-        val mssv = etMssv.text.toString()
-        val hoTen = etHoTen.text.toString()
-
-        if (mssv.isNotEmpty() && hoTen.isNotEmpty()) {
-            studentList.add(Student(mssv, hoTen))
-            studentAdapter.notifyItemInserted(studentList.size - 1)
-            clearInputFields()
-        }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
     }
 
-    private fun updateStudent() {
-        selectedStudent?.let { student ->
-            val newHoTen = etHoTen.text.toString()
-            if (newHoTen.isNotEmpty()) {
-                student.hoTen = newHoTen
-                val index = studentList.indexOf(student)
-                if (index != -1) {
-                    studentAdapter.notifyItemChanged(index)
-                }
-                clearInputFields()
-                selectedStudent = null
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_student -> {
+                val intent = Intent(this, AddStudentActivity::class.java)
+                addStudentLauncher.launch(intent)
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun deleteStudent(student: Student) {
-        val index = studentList.indexOf(student)
-        if (index != -1) {
-            studentList.removeAt(index)
-            studentAdapter.notifyItemRemoved(index)
-        }
-    }
-
-    private fun clearInputFields() {
-        etMssv.text.clear()
-        etHoTen.text.clear()
     }
 }

@@ -3,26 +3,22 @@ package com.example.studentmanagement
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class StudentAdapter(
     private var studentList: MutableList<Student>,
-    private val onItemClick: (Student) -> Unit,
-    private val onDeleteClick: (Student) -> Unit
+    private val onItemClick: (Student) -> Unit
 ) : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() {
 
     inner class StudentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvHoTen: TextView = itemView.findViewById(R.id.tvHoTen)
-        val tvMssv: TextView = itemView.findViewById(R.id.tvMssv)
-        val ivDelete: ImageView = itemView.findViewById(R.id.ivDelete)
+        private val tvHoTen: TextView = itemView.findViewById(R.id.tvHoTen)
+        private val tvMssv: TextView = itemView.findViewById(R.id.tvMssv)
 
         fun bind(student: Student) {
             tvHoTen.text = student.hoTen
             tvMssv.text = student.mssv
             itemView.setOnClickListener { onItemClick(student) }
-            ivDelete.setOnClickListener { onDeleteClick(student) }
         }
     }
 
@@ -36,10 +32,4 @@ class StudentAdapter(
     }
 
     override fun getItemCount() = studentList.size
-
-    fun updateData(newList: List<Student>) {
-        studentList.clear()
-        studentList.addAll(newList)
-        notifyDataSetChanged()
-    }
 }
